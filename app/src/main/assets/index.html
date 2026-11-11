@@ -3606,7 +3606,7 @@ function createAudio(extCtx) {
   title.addEventListener('pointerdown', function (e) {
     unlockSound();
     if (e.target.closest && e.target.closest('.tmenu, .tmp')) return;
-    if (stage === 'press') setStage('mode');
+    if (stage === 'press' && !inGame) start();
   });
   document.getElementById('mode1').addEventListener('click', function () { start(); });
   document.getElementById('modeM').addEventListener('click', function () { resetLobby(); setStage('mp'); });
@@ -3633,8 +3633,7 @@ function createAudio(extCtx) {
   window.addEventListener('keydown', function (e) {
     if (done || title.hidden || inGame) return;
     if (stage === 'press' && (e.code === 'Enter' || e.code === 'Space' || e.code === 'NumpadEnter')) {
-      e.preventDefault(); e.stopPropagation(); unlockSound(); setStage('mode');
-      try { document.getElementById('mode1').focus({ preventScroll: true }); } catch (x) {}
+      e.preventDefault(); e.stopPropagation(); unlockSound(); start();
     }
   }, true);
 
