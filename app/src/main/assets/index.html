@@ -335,6 +335,9 @@
   .home .btn.play { position: absolute; right: 5%; bottom: 74px; pointer-events: auto; min-width: 230px; height: 58px; border: 0; border-radius: 0; background: #d3213a; color: #fff; font-family: var(--display); font-size: 1.5rem; letter-spacing: .06em; text-transform: uppercase; clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%); box-shadow: none; cursor: pointer; }
   .home .btn.play:hover { background: #e8344c; }
   .home .btn.play:focus-visible { outline: 3px solid #ffd84a; outline-offset: -4px; }
+  .home .tmp { position: absolute; z-index: 5; left: 50%; top: 50%; bottom: auto; transform: translate(-50%, -50%); width: min(90vw, 420px); padding: 22px 20px; background: #17181c; border: 2px solid #3a3d46; border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,.45); pointer-events: auto; }
+  .home .tmp .tstat { text-shadow: none; }
+  #menu.lobby .home-sub, #menu.lobby .btn.play, #menu.lobby .hn-tabs, #menu.lobby .hn-right { pointer-events: none; opacity: .35; }
   .home-set { position: absolute; top: 58px; right: max(10px, env(safe-area-inset-right, 0px)); width: min(340px, 92%); max-height: calc(100% - 140px); overflow-y: auto; background: var(--panel); border: 3px solid var(--line); border-radius: 18px; padding: 12px 14px; pointer-events: auto; z-index: 3; }
   .home-set[hidden] { display: none; }
   @media (max-width: 760px) {
@@ -447,13 +450,6 @@
       <button class="tbtn" id="modeM" type="button">Multijugador</button>
       <button class="tbtn" id="modeB" type="button">Battle Royale</button>
     </div>
-    <div class="tmp" id="tmp" hidden>
-      <p class="tstat" id="tstat" aria-live="polite"></p>
-      <div class="tplayers" id="tplayers"></div>
-      <button class="tbtn" id="tmatch" type="button">Emparejar</button>
-      <button class="tbtn" id="tgo" type="button" hidden>Entrar</button>
-      <button class="tback" id="tback" type="button">‹ Atrás</button>
-    </div>
   </div>
 
   <section class="sheet hub" id="menu" data-tab="play" aria-label="Menú principal">
@@ -517,10 +513,10 @@
         </div>
       </header>
       <div class="home-sub" role="radiogroup" aria-label="Modo de juego">
-        <input type="radio" name="mode" value="sp" checked hidden><input type="radio" name="mode" value="br" hidden>
+        <input type="radio" name="mode" value="sp" checked hidden><input type="radio" name="mode" value="br" hidden><input type="radio" name="mode" value="mp" hidden>
         <button class="hs on" type="button" data-mode="sp" role="radio" aria-checked="true">1 jugador</button>
         <button class="hs" type="button" data-mode="br" role="radio" aria-checked="false">Battle Royale</button>
-        <button class="hs" type="button" disabled title="Se elige desde la pantalla de título">Multijugador</button>
+        <button class="hs" type="button" data-mode="mp" role="radio" aria-checked="false">Multijugador</button>
       </div>
       <div class="home-stage" aria-hidden="true">
         <div class="np"><b>JUGADOR</b><i>1</i></div>
@@ -532,6 +528,14 @@
         <button type="button" class="slot" disabled>Invitar</button><button type="button" class="slot" disabled>Invitar</button>
       </div>
       <button class="btn play" id="playBtn" type="button">Jugar</button>
+      <div class="tmp" id="tmp" hidden>
+          <p class="tstat" id="tstat" aria-live="polite"></p>
+          <div class="tplayers" id="tplayers"></div>
+          <button class="tbtn" id="tmatch" type="button">Emparejar</button>
+          <button class="tbtn" id="tgo" type="button" hidden>Entrar</button>
+          <button class="tback" id="tback" type="button">‹ Atrás</button>
+      </div>
+
       <div class="home-set" id="homeSettings" hidden>
         <h3 class="mh">Música</h3>
       <div class="tracks" id="tracks" role="radiogroup" aria-label="Pista de música"></div>
@@ -2450,6 +2454,7 @@ function createAudio(extCtx) {
   Array.prototype.forEach.call(document.querySelectorAll('.hs[data-mode]'), function (b) {
     b.addEventListener('click', function () {
       var r = document.querySelector('input[name="mode"][value="' + b.getAttribute('data-mode') + '"]'); if (r) r.checked = true;
+      if (!started) playBtn.textContent = b.getAttribute('data-mode') === 'mp' ? 'Emparejar' : 'Jugar';
       Array.prototype.forEach.call(document.querySelectorAll('.hs[data-mode]'), function (o) { var on = o === b; o.classList.toggle('on', on); o.setAttribute('aria-checked', on ? 'true' : 'false'); });
     });
   });
@@ -2465,7 +2470,9 @@ function createAudio(extCtx) {
     $('hubRar').textContent = rr ? rr.textContent : ''; $('hubRar').className = rr ? rr.className : 'rar';
   }
   if (window.__preMode === 'br') { var brR = document.querySelector('input[name="mode"][value="br"]'); if (brR) brR.checked = true; }
-  playBtn.addEventListener('click', function () { if (!started && curMode() === 'br') { try { beginBR(); } catch (err) {} } closeMenu(); playBtn.blur(); });
+  playBtn.addEventListener('click', function () {
+    if (!started && curMode() === 'mp') { if (window.__openLobby) { menu.classList.add('lobby'); window.__openLobby(); } return; }
+    if (!started && curMode() === 'br') { try { beginBR(); } catch (err) {} } closeMenu(); playBtn.blur(); });
   $('skinsBtn').addEventListener('click', function (e) { e.currentTarget.blur(); if (MPG) return; if (state === 'menu') { if (started) closeMenu(); } else openMenu(); });
   $('againBtn').addEventListener('click', function (e) { e.currentTarget.blur(); if (MPG) { mpQuit(); return; } resetGame(); });
   Array.prototype.forEach.call(document.querySelectorAll('input[name="skin"]'), function (el) {
@@ -3579,14 +3586,17 @@ function createAudio(extCtx) {
   function setStage(s) { stage = s; btn.style.display = s === 'press' ? '' : 'none'; tmenu.hidden = s !== 'mode'; tmp.hidden = s !== 'mp'; }
   function resetLobby() { tstat.textContent = ''; tplayers.innerHTML = ''; tmatch.hidden = false; tmatch.disabled = false; tgo.hidden = true; tgo.disabled = false; }
   function leaveNet() { if (net) { try { net.leave(true); } catch (e) {} net = null; } }
+  window.__openLobby = function () { resetLobby(); tmp.hidden = false; stage = 'mp'; };
+  function closeLobby() { leaveNet(); resetLobby(); tmp.hidden = true; stage = 'press'; var mn = document.getElementById('menu'); if (mn) mn.classList.remove('lobby'); }
   function titleBack() {
     if (inGame) return false;
-    if (stage === 'mp') { leaveNet(); resetLobby(); setStage('mode'); return true; }
+    if (stage === 'mp') { closeLobby(); return true; }
     if (stage === 'mode') { setStage('press'); return true; }
     return false;
   }
   window.__titleBack = titleBack;
   window.__back = function () {
+    if (stage === 'mp' && !inGame) { closeLobby(); return 'menu'; }
     if (!title.hidden && !inGame) return titleBack() ? 'menu' : 'exit';
     var m = document.getElementById('menu');
     if (m && m.hidden) { window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape' })); return 'menu'; }
@@ -3621,7 +3631,7 @@ function createAudio(extCtx) {
       status: function (s) { tstat.textContent = s; },
       roster: renderRoster,
       error: function (s) { net = null; tplayers.innerHTML = ''; tgo.hidden = true; tmatch.hidden = false; tmatch.disabled = false; tstat.textContent = s; },
-      start: function (info) { inGame = true; tmp.hidden = true; G().beginMP(info, net); start(); },
+      start: function (info) { inGame = true; tmp.hidden = true; var mn = document.getElementById('menu'); if (mn) mn.classList.remove('lobby'); G().beginMP(info, net); start(); },
       input: function (b, from) { G().input(b, from); },
       ctl: function (m, from) { G().ctl(m, from); },
       gone: function (pid) { G().gone(pid); },
