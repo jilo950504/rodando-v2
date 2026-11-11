@@ -257,7 +257,6 @@
   .hub-panel h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 1.6rem; line-height: 1; }
   .hub-panel h2 .w { color: var(--water); } .hub-panel h2 .l { color: var(--lava); }
   #menu[data-tab="atm"] .hub-atm { display: flex; }
-  #menu[data-tab="play"] .hub-play { display: flex; left: 50%; transform: translateX(-50%); width: min(94%, 560px); bottom: auto; max-height: calc(100% - 78px); }
   .rar-h { margin: 2px 0 0; display: flex; align-items: center; gap: 8px; }
   .rar-h .rar { font-size: 0.7rem; align-self: auto; }
   body:has(#menu:not([hidden])) .hint, body:has(#menu:not([hidden])) .mini { display: none; }
@@ -278,11 +277,77 @@
     .hub-top { top: 100px; } .hub-tab { padding: 6px 14px; font-size: 0.9rem; }
     .hub-panel { top: auto; left: 10px; right: 10px; width: auto; max-height: 56%; bottom: 10px; }
     #menu[data-tab="atm"] .hub-atm { max-height: 40%; }
-    #menu[data-tab="play"] .hub-play { left: 10px; right: 10px; transform: translateZ(0); width: auto; top: auto; bottom: 10px; max-height: 66%; }
-    .hub-cap { right: 0; left: 0; width: auto; bottom: calc(40% + 22px); }
+      .hub-cap { right: 0; left: 0; width: auto; bottom: calc(40% + 22px); }
     .modes { grid-template-columns: 1fr; } .mode .mc { min-height: 0; }
   }
   @media (max-height: 520px) and (min-width: 701px) { .hub-panel { top: 56px; } .hub-tab { padding: 5px 16px; } }
+
+  /* ---------- Pantalla principal (estilo Strinova) ---------- */
+  .home-bg { position: absolute; inset: 0; opacity: 0; transition: opacity .35s; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 55% at 50% -8%, #fff 0, rgba(255,255,255,0) 70%),
+      linear-gradient(112deg, transparent 36%, rgba(255,255,255,.7) 43%, transparent 50%),
+      linear-gradient(68deg, transparent 50%, rgba(255,255,255,.6) 57%, transparent 64%),
+      linear-gradient(104deg, transparent 22%, rgba(255,255,255,.35) 27%, transparent 32%),
+      linear-gradient(76deg, transparent 66%, rgba(255,255,255,.35) 71%, transparent 76%),
+      repeating-linear-gradient(60deg, rgba(120,128,146,.07) 0 2px, transparent 2px 70px),
+      repeating-linear-gradient(120deg, rgba(120,128,146,.07) 0 2px, transparent 2px 70px),
+      linear-gradient(180deg, #eceff3 0%, #c5cad5 100%); }
+  .game:has(#menu[data-tab="play"]:not([hidden])) .home-bg { opacity: 1; }
+  .game:has(#menu[data-tab="play"]:not([hidden])) .hud { display: none; }
+  .home { display: none; position: absolute; inset: 0; color: #fff; }
+  #menu[data-tab="play"] .home { display: block; }
+  #menu[data-tab="play"] .hub-top { display: none; }
+  .home-nav { position: absolute; top: 0; left: 0; right: 0; height: 52px; background: #17181c; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; pointer-events: auto; box-shadow: 0 3px 10px rgba(0,0,0,.35); z-index: 2; padding: 0 max(10px, env(safe-area-inset-left, 0px)); }
+  .hn-left, .hn-right { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .hn-right { justify-content: flex-end; }
+  .hn-av { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #2b2d34; }
+  .hn-name { font-family: var(--display); font-size: 0.9rem; letter-spacing: .04em; }
+  .hn-lvl { background: #3a3d46; border-radius: 6px; padding: 1px 8px; font-family: var(--display); font-size: 0.85rem; color: #ffd84a; }
+  .hn-tabs { display: flex; align-items: stretch; height: 52px; gap: 2px; }
+  .hn-tab { background: transparent; border: 0; color: #e4e6eb; font-family: var(--body); font-weight: 700; font-size: 0.78rem; letter-spacing: .1em; text-transform: uppercase; padding: 0 16px; cursor: pointer; }
+  .hn-tab:hover:not(:disabled) { color: #fff; background: rgba(255,255,255,.08); }
+  .hn-tab:disabled { opacity: .4; cursor: default; }
+  .hn-tab:focus-visible, .hn-ico:focus-visible, .hs:focus-visible, .hn-play:focus-visible { outline: 3px solid #ffd84a; outline-offset: -3px; }
+  .hn-play { position: relative; border: 0; background: #d3213a; color: #fff; font-family: var(--display); font-size: 1.15rem; letter-spacing: .06em; text-transform: uppercase; padding: 0 44px; height: 64px; clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%); cursor: default; display: grid; place-items: center; }
+  .hn-cur { display: inline-flex; align-items: center; gap: 5px; font-size: 0.78rem; font-family: var(--mono); color: #e4e6eb; }
+  .hn-cur i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .hn-cur .c1 { background: #ffd84a; } .hn-cur .c2 { background: #5ec8ff; }
+  .hn-ico { background: transparent; border: 0; color: #e4e6eb; width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; cursor: pointer; }
+  .hn-ico:hover { background: rgba(255,255,255,.1); }
+  .home-sub { position: absolute; top: 66px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; pointer-events: auto; z-index: 1; }
+  .hs { border: 0; min-width: 132px; height: 30px; padding: 0 16px; background: #5a5e68; color: #fff; font-family: var(--body); font-weight: 800; font-size: 0.74rem; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; clip-path: polygon(0 0, 100% 0, 94% 100%, 0 100%); }
+  .hs.on { background: #d3213a; }
+  .hs { white-space: nowrap; }
+  .hs:disabled { opacity: .55; cursor: default; }
+  #menu.inplay .home-sub .hs:not(.on) { display: none; }
+  .home-stage { position: absolute; inset: 0; pointer-events: none; }
+  .np { position: absolute; left: 50%; top: 15%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; background: #0e0f12; border: 2px solid #c9ccd4; border-radius: 6px; padding: 3px 22px; }
+  .np b { font-family: var(--display); font-weight: 400; color: #ffd84a; font-size: 1rem; letter-spacing: .03em; }
+  .np i { font-style: normal; font-family: var(--mono); font-size: .75rem; color: #c9ccd4; border-left: 1px solid #555; padding-left: 10px; }
+  .home-pad { position: absolute; left: 50%; top: 61%; width: min(36vw, 340px); height: 34px; transform: translate(-50%, -50%); border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,.95) 0, rgba(130,200,255,.5) 38%, rgba(130,200,255,0) 70%); box-shadow: 0 0 0 2px rgba(90,160,225,.45) inset, 0 8px 22px rgba(60,100,160,.25); }
+  .home-skin { position: absolute; left: 50%; top: calc(61% + 30px); transform: translateX(-50%); font-family: var(--display); font-size: .95rem; color: #3a3f4d; text-shadow: 0 1px 0 #fff; white-space: nowrap; }
+  .home-slots { position: absolute; left: 0; right: 0; bottom: 14px; display: grid; grid-template-columns: 1fr 1fr minmax(120px, 24vw) 1fr 1fr; gap: 12px; padding: 0 5%; pointer-events: none; }
+  .slot { height: 40px; border: 0; border-radius: 6px; background: linear-gradient(180deg, #7b7f89, #55585f); color: #fff; font-family: var(--body); font-weight: 800; letter-spacing: .1em; text-transform: uppercase; font-size: .8rem; opacity: .85; }
+  .slot:nth-child(1) { grid-column: 1; } .slot:nth-child(2) { grid-column: 2; } .slot:nth-child(3) { grid-column: 4; } .slot:nth-child(4) { grid-column: 5; }
+  .slot::before { content: "+"; margin-right: 6px; font-size: 1rem; }
+  .home .btn.play { position: absolute; right: 5%; bottom: 74px; pointer-events: auto; min-width: 230px; height: 58px; border: 0; border-radius: 0; background: #d3213a; color: #fff; font-family: var(--display); font-size: 1.5rem; letter-spacing: .06em; text-transform: uppercase; clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%); box-shadow: none; cursor: pointer; }
+  .home .btn.play:hover { background: #e8344c; }
+  .home .btn.play:focus-visible { outline: 3px solid #ffd84a; outline-offset: -4px; }
+  .home-set { position: absolute; top: 58px; right: max(10px, env(safe-area-inset-right, 0px)); width: min(340px, 92%); max-height: calc(100% - 140px); overflow-y: auto; background: var(--panel); border: 3px solid var(--line); border-radius: 18px; padding: 12px 14px; pointer-events: auto; z-index: 3; }
+  .home-set[hidden] { display: none; }
+  @media (max-width: 760px) {
+    .hn-name, .hn-cur, .hn-lvl { display: none; }
+    .hn-tab { padding: 0 8px; font-size: .68rem; letter-spacing: .04em; }
+    .hn-tab:disabled { display: none; }
+    .hn-play { padding: 0 26px; }
+    .hs { min-width: 0; padding: 0 10px 0 8px; font-size: .6rem; letter-spacing: .04em; }
+    .home-slots { grid-template-columns: 1fr 1fr; padding: 0 12px; bottom: 10px; }
+    .slot:nth-child(n) { grid-column: auto; } .slot:nth-child(n+3) { display: none; }
+    .home .btn.play { right: 12px; left: 12px; bottom: 62px; min-width: 0; }
+  }
+  @media (max-height: 460px) { .np { display: none; } .home-slots { display: none; } .home .btn.play { bottom: 12px; right: 3%; left: auto; min-width: 190px; height: 48px; font-size: 1.2rem; } }
 
   /* ---------- Pantalla de título ---------- */
   .title { position: absolute; inset: 0; z-index: 20; overflow: hidden; background: #02061a; transition: opacity 0.8s ease; touch-action: manipulation; cursor: pointer; }
@@ -347,6 +412,7 @@
 </style>
 
 <div class="game" id="game">
+  <div class="home-bg" aria-hidden="true"></div>
   <canvas id="gl" aria-label="Tablero 3D del juego"></canvas>
   <canvas id="speedfx" aria-hidden="true"></canvas>
 
@@ -393,7 +459,7 @@
   <section class="sheet hub" id="menu" data-tab="play" aria-label="Menú principal">
     <div class="hub-top" role="tablist">
       <button class="hub-tab" type="button" role="tab" data-tab="atm" aria-selected="false">Atmospheres</button>
-      <button class="hub-tab" type="button" role="tab" data-tab="play" aria-selected="true">Jugar</button>
+      <button class="hub-tab" type="button" role="tab" data-tab="play" aria-selected="true">Inicio</button>
     </div>
 
     <div class="hub-panel hub-atm" role="tabpanel" aria-label="Atmospheres">
@@ -433,17 +499,44 @@
     </div>
     <div class="hub-cap" aria-live="polite"><span class="rar r-def" id="hubRar">Común</span><div class="hub-name" id="hubName">Predeterminada</div></div>
 
-    <div class="hub-panel hub-play" role="tabpanel" aria-label="Jugar">
-      <h2>Ju<span class="l">gar</span></h2>
-      <div class="modes" role="radiogroup" aria-label="Modo de juego">
-        <label class="mode"><input type="radio" name="mode" value="sp" checked><span class="mc"><b>1 jugador</b><small>Mapa clásico · 20 cristales · colinas y abismos</small></span></label>
-        <label class="mode"><input type="radio" name="mode" value="br"><span class="mc"><b>Battle Royale</b><small>Mapa de 500 m con colinas · 45 cristales · dash</small></span></label>
+    <div class="home" role="tabpanel" aria-label="Pantalla principal">
+      <header class="home-nav">
+        <div class="hn-left"><span class="hn-av" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26"><circle cx="12" cy="12" r="9" fill="#f1ece1" stroke="#14163a" stroke-width="2"/><path d="M3.5 11h17" stroke="#d65a4a" stroke-width="3"/></svg></span><span class="hn-name">JUGADOR</span><span class="hn-lvl">1</span></div>
+        <nav class="hn-tabs" aria-label="Secciones">
+          <button class="hn-tab" type="button" data-go="atm">Atmospheres</button>
+          <button class="hn-tab" type="button" disabled>Temporada</button>
+          <button class="hn-play" type="button" aria-current="page"><span>Jugar</span></button>
+          <button class="hn-tab" type="button" disabled>Carrera</button>
+          <button class="hn-tab" type="button" disabled>Tienda</button>
+          <button class="hn-tab" type="button" disabled>Unión</button>
+        </nav>
+        <div class="hn-right">
+          <span class="hn-cur" title="Cristales"><i class="c1"></i>0</span><span class="hn-cur" title="Monedas"><i class="c2"></i>0</span>
+          <button class="hn-ico" type="button" id="homeMusic" aria-label="Silenciar música"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="3" fill="currentColor"/><circle cx="17.5" cy="16" r="3" fill="currentColor"/></svg></button>
+          <button class="hn-ico" type="button" id="homeSet" aria-label="Ajustes" aria-expanded="false"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+        </div>
+      </header>
+      <div class="home-sub" role="radiogroup" aria-label="Modo de juego">
+        <input type="radio" name="mode" value="sp" checked hidden><input type="radio" name="mode" value="br" hidden>
+        <button class="hs on" type="button" data-mode="sp" role="radio" aria-checked="true">1 jugador</button>
+        <button class="hs" type="button" data-mode="br" role="radio" aria-checked="false">Battle Royale</button>
+        <button class="hs" type="button" disabled title="Se elige desde la pantalla de título">Multijugador</button>
       </div>
-      <p class="sub modehint">El multijugador se elige desde la pantalla de título.</p>
-      <h3 class="mh">Música</h3>
+      <div class="home-stage" aria-hidden="true">
+        <div class="np"><b>JUGADOR</b><i>1</i></div>
+        <div class="home-pad"></div>
+        <div class="home-skin" id="homeSkin">Predeterminada · Común</div>
+      </div>
+      <div class="home-slots">
+        <button type="button" class="slot" disabled>Invitar</button><button type="button" class="slot" disabled>Invitar</button>
+        <button type="button" class="slot" disabled>Invitar</button><button type="button" class="slot" disabled>Invitar</button>
+      </div>
+      <button class="btn play" id="playBtn" type="button">Jugar</button>
+      <div class="home-set" id="homeSettings" hidden>
+        <h3 class="mh">Música</h3>
       <div class="tracks" id="tracks" role="radiogroup" aria-label="Pista de música"></div>
       <div class="vol"><label class="k" for="vol">Volumen</label><input type="range" id="vol" min="0" max="1" step="0.05" value="0.7"><span id="volVal">70%</span></div>
-      <button class="btn play" id="playBtn" type="button">Jugar</button>
+      </div>
     </div>
   </section>
 
@@ -2343,11 +2436,32 @@ function createAudio(extCtx) {
     menu.style.display = 'none'; void menu.offsetHeight; menu.style.display = '';
   }
   hubTabs.forEach(function (b) { b.addEventListener('click', function () { setTab(b.getAttribute('data-tab')); b.blur(); }); });
+  var homeOn = false, homeFog = null;
+  function setHome(on) {
+    homeOn = on;
+    if (on) {
+      homeFog = scene.fog; scene.fog = null;
+      scene.children.forEach(function (c) { if (c === ballGroup || c.isLight) return; c.userData._hv = c.visible; c.visible = false; });
+    } else {
+      scene.fog = homeFog;
+      scene.children.forEach(function (c) { if (c === ballGroup || c.isLight) return; if (c.userData._hv !== undefined) { c.visible = c.userData._hv; delete c.userData._hv; } });
+    }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.hs[data-mode]'), function (b) {
+    b.addEventListener('click', function () {
+      var r = document.querySelector('input[name="mode"][value="' + b.getAttribute('data-mode') + '"]'); if (r) r.checked = true;
+      Array.prototype.forEach.call(document.querySelectorAll('.hs[data-mode]'), function (o) { var on = o === b; o.classList.toggle('on', on); o.setAttribute('aria-checked', on ? 'true' : 'false'); });
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.hn-tab[data-go]'), function (b) { b.addEventListener('click', function () { setTab(b.getAttribute('data-go')); }); });
+  $('homeSet').addEventListener('click', function () { var h = $('homeSettings'); h.hidden = !h.hidden; this.setAttribute('aria-expanded', h.hidden ? 'false' : 'true'); });
+  $('homeMusic').addEventListener('click', function () { $('muteBtn').click(); this.blur(); });
   function curMode() { var r = document.querySelector('input[name="mode"]:checked'); return r ? r.value : 'sp'; }
   function hubCaption() {
     var c = document.querySelector('input[name="skin"]:checked'); if (!c) return;
     var card = c.parentNode, nm = card.querySelector('.nm'), rr = card.querySelector('.rar');
     $('hubName').textContent = nm ? nm.textContent : '';
+    $('homeSkin').textContent = (nm ? nm.textContent : '') + (rr ? ' · ' + rr.textContent : '');
     $('hubRar').textContent = rr ? rr.textContent : ''; $('hubRar').className = rr ? rr.className : 'rar';
   }
   if (window.__preMode === 'br') { var brR = document.querySelector('input[name="mode"][value="br"]'); if (brR) brR.checked = true; }
@@ -2729,6 +2843,7 @@ function createAudio(extCtx) {
       shadow.scale.set(sc, sc, sc);
       shadow.material.opacity = Math.max(0.12, 0.38 - h * 0.05);
     } else shadow.visible = false;
+    if (homeOn) shadow.visible = false;
 
     var pxUnit = viewH / (2 * camDist * Math.tan(camera.fov * Math.PI / 360));
     var uPx = R * pxUnit * dpr * 1.5;
@@ -2737,14 +2852,17 @@ function createAudio(extCtx) {
     fx.butterfly.userData.uPx.value = uPx;
 
     // Cámara en tercera persona
-    var lOff = state === 'menu' ? -1.5 : 0.7;
+    var wantHome = state === 'menu' && !menu.hidden && menu.getAttribute('data-tab') === 'play';
+    if (wantHome !== homeOn) setHome(wantHome);
+    var lOff = homeOn ? -0.32 : (state === 'menu' ? -1.5 : 0.7);
     lookOff += (lOff - lookOff) * Math.min(1, dt * 4);
     var tgtY = Math.max(p.y, -3);
     var cp = Math.cos(camPitch), spch = Math.sin(camPitch);
     var dx = p.x + Math.sin(camYaw) * cp * camDist;
     var dy = tgtY + spch * camDist;
     var dz = p.z + Math.cos(camYaw) * cp * camDist;
-    var cgH = groundAt(dx, dz, 1e9);
+    if (homeOn) { dx = p.x; dy = p.y + 0.35; dz = p.z + 3.7 * (viewW / viewH < 1 ? 1.4 : 1); }
+    var cgH = homeOn ? -Infinity : groundAt(dx, dz, 1e9);
     if (cgH > -Infinity && dy < cgH + 1.3) dy = cgH + 1.3;
     var kc = 1 - Math.exp(-dt * 9);
     if (camPos.lengthSq() === 0) camPos.set(dx, dy, dz);
