@@ -3183,8 +3183,10 @@ function createAudio(extCtx) {
     }
 
     // cambiar el mundo activo
-    board.visible = false;
-    crystals.forEach(function (cr) { cr.g.visible = false; });
+    // el menu principal guarda y restaura la visibilidad: actualizar el valor guardado
+    function hideObj(o) { if (o.userData._hv !== undefined) o.userData._hv = false; o.visible = false; }
+    hideObj(board);
+    crystals.forEach(function (cr) { hideObj(cr.g); });
     N = BN; T = BT; ORG = BO; WALL_H = 1.0;
     cell = []; wallBase = [];
     for (var rr = 0; rr < BN; rr++) { cell[rr] = []; wallBase[rr] = []; for (var cc = 0; cc < BN; cc++) { cell[rr][cc] = 1; wallBase[rr][cc] = 0; } }
